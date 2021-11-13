@@ -1,0 +1,193 @@
+swagger: "2.0"
+info:
+  title: "Vocabulary"
+  description: "Vocabulary"
+  version: "1.0"
+
+host: api.vocabulary.local
+basePath: /api/v1
+schemes:
+  - https
+
+paths:
+  /auth/login:
+    post:
+      summary: Authentikáció
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: auth
+          schema:
+            $ref: "#/definitions/Login"
+      responses:
+        200:
+          description: Sikeres belépés
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+                default: [ ]
+                example: [ ]
+              user:
+                $ref: '#/definitions/AuthUserResponse'
+              token:
+                $ref: '#/definitions/AuthToken'
+        400:
+          description: Sikertelen belépés. Validálási probléma, az elküldött email cím, jelszó nem felel meg a validálási követelményeknek.
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [
+                    "validator": [
+                        "email": [
+                            "Email cím mező kitöltése kötelező!",
+                            "Hibás email formátum!",
+                        ],
+                        "password": [
+                            "A jelszó nem felel meg a követelményeknek!"
+                        ]
+                    ]
+                ]
+        401:
+          description: Sikertelen belépés, hibás felhasználói adatok
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [
+                    "auth": [
+                        "Hibás belépési adatok vagy nem létezik a felhasználó!",
+                    ]
+                ]
+  /auth/register:
+    post:
+      summary: Regisztráció
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: auth
+          schema:
+            $ref: "#/definitions/Register"
+      responses:
+        200:
+          description: Sikeres regisztráció
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+                default: [ ]
+                example: [ ]
+        400:
+          description: Sikertelen regisztráció. Validálási probléma, az elküldött adatok nem felelnek meg a validálási követelményeknek.
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [
+                    "validator": [
+                        "fullname": [
+                            "Mező kitöltése kötelező",
+                        ],
+                        "email": [
+                            "Email cím mező kitöltése kötelező!",
+                            "Ezzel az email címmel már korábban regisztráltak",
+                            "Hibás email formátum!",
+                        ],
+                        "password": [
+                            "A jelszó nem felel meg a követelményeknek!",
+                            "A két jelszó nem egyezik"
+                        ],
+                        "password_confirmation": [
+                            "A jelszó nem felel meg a követelményeknek!",
+                            "A két jelszó nem egyezik"
+                        ]
+                    ]
+                ]
+
+definitions:
+  Login:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        example: 'user@email.hu'
+      password:
+        type: string
+        example: 'SzuperTitkosJ31$z0'
+  Register:
+    type: object
+    required:
+      - email
+      - firstname
+      - lastname
+      - password
+      - password_confirmation
+    properties:
+      fullname:
+        type: string
+        example: 'Legyek Réka Matilda'
+      email:
+        type: string
+        example: 'matilda.legyek.rekak@gmail.com'
+      password:
+        type: string
+        example: 'R€kAJ3Ł$zav4VagyOk'
+      password_confirmation:
+        type: string
+        example: 'R€kAJ3Ł$zav4VagyOk'
+
+  StatusResponse:
+    type: object
+    required:
+      - success
+    properties:
+      success:
+        type: boolean
+      errors:
+        type: array
+        items:
+          type: string
+
+  AuthUserResponse:
+    type: object
+    description: Felhasználó adatai
+    properties:
+      id:
+        type: integer
+      email:
+        type: string
+      fullName:
+        type: string
+  AuthToken:
+    type: object
+    description: Authentikációs token
+    properties:
+      token:
+        type: string
+        example: "eyJ0eXAiOiJKV.....0zk6uSrak7uqIA"
+      expire:
+        type: integer
+        example: 1636000000

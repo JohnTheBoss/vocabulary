@@ -3,9 +3,10 @@
 namespace App\RequestModel\Auth;
 
 use App\Adapter\RequestAdapter;
+use App\RequestModel\RequestModelInterface;
 use App\Validator\InputValidatorBuilder;
 
-class LoginRequest
+class LoginRequest implements RequestModelInterface
 {
     public $email;
     public $password;

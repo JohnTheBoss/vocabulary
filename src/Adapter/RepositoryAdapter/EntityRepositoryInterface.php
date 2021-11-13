@@ -9,6 +9,8 @@ interface EntityRepositoryInterface
 
     public function findOneBy(array $criteria);
 
+    public function save($object);
+
     public function execute();
 
 }

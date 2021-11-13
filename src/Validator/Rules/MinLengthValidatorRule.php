@@ -14,7 +14,7 @@ class MinLengthValidatorRule extends AbstractValidatorRule
     {
         parent::clearErrors();
 
-        if (strlen($data) < $this->config) {
+        if (mb_strlen($data) < $this->config) {
             $this->addError('A minimum karakter hossz nem éri el a ' . $this->config . ' hosszt!');
         }
     }

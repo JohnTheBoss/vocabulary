@@ -19,7 +19,7 @@ class Validator
         $this->errors = [];
 
         foreach ($this->validatorConfig as $inputName => $ruleConfig) {
-            $rule = RuleFactory::getRule($ruleConfig->type);
+            $rule = RuleFactory::getRule($ruleConfig->type, $ruleConfig->config);
             $rule->validate($ruleConfig->data);
             $errors = $rule->getErrors();
 

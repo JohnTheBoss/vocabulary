@@ -64,4 +64,39 @@ class ValidatorTest extends TestCase
         $this->assertEmpty($passwordValidator->getErrors());
 
     }
+
+    public function testDataIsSameValidator()
+    {
+        /**
+         * @var $validator \App\Validator\Rules\RuleInterface
+         */
+
+        $config['confirmation_field'] = 'validate_confirmation';
+        $config['confirmation_data'] = '123';
+
+        $validator = \App\Validator\Rules\RuleFactory::getRule('isSame', $config);
+        $validator->validate('');
+        $this->assertFalse($validator->isValid());
+        $this->assertEquals(
+            [
+                'Az értéknek nem egyezik a {validate_confirmation} mező értékével!',
+            ],
+            $validator->getErrors()
+        );
+
+
+        $validator->validate('333');
+        $this->assertFalse($validator->isValid());
+        $this->assertEquals(
+            [
+                'Az értéknek nem egyezik a {validate_confirmation} mező értékével!',
+            ],
+            $validator->getErrors()
+        );
+
+
+        $validator->validate('123');
+        $this->assertTrue($validator->isValid());
+        $this->assertEmpty($validator->getErrors());
+    }
 }

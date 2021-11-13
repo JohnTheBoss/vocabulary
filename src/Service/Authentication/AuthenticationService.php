@@ -7,20 +7,22 @@ use App\Adapter\AuthenticationAdapter\PasswordHashAdapterInterface;
 use App\Adapter\RepositoryAdapter\UserRepositoryAdapter;
 use App\Entity\User;
 use App\RequestModel\Auth\LoginRequest;
+use App\RequestModel\RequestModelInterface;
 use App\ResponseModel\Auth\LoginResponseModel;
 use App\ResponseModel\Auth\TokenResponse;
 use App\ResponseModel\ResponseModelInterface;
 use App\ResponseModel\UserResponse;
+use App\Service\AbstractRequestService;
 
-class AuthenticationService
+class AuthenticationService extends AbstractRequestService
 {
     private const EXPIRE_TIME_IN_SECOND = 86400;
 
-    private LoginRequest $loginRequest;
+    protected RequestModelInterface $requestModel;
     private UserRepositoryAdapter $userRepositoryAdapter;
     private PasswordHashAdapterInterface $passwordHashAdapterInterface;
     private JWTAdapterInterface $JWTAdapterInterface;
-    private LoginResponseModel $loginResponseModel;
+    protected ResponseModelInterface $responseModel;
 
     public function __construct(
         LoginRequest                 $loginRequest,
@@ -30,11 +32,11 @@ class AuthenticationService
         LoginResponseModel           $loginResponseModel
     )
     {
-        $this->loginRequest = $loginRequest;
+        $this->requestModel = $loginRequest;
         $this->userRepositoryAdapter = $userRepositoryAdapter;
         $this->passwordHashAdapterInterface = $passwordHashAdapterInterface;
         $this->JWTAdapterInterface = $JWTAdapterInterface;
-        $this->loginResponseModel = $loginResponseModel;
+        $this->responseModel = $loginResponseModel;
     }
 
     public function getResponseModel(): ResponseModelInterface
@@ -43,43 +45,24 @@ class AuthenticationService
             $this->authentication();
         }
 
-        return $this->loginResponseModel;
-    }
-
-    private function checkRequestIsValid(): bool
-    {
-        $validator = $this->loginRequest->getValidator();
-        $validator->validate();
-
-        if (!$validator->isValid()) {
-            $this->loginResponseModel->setResponseStatus(false);
-            $this->loginResponseModel->setResponseStatusCode(400);
-            $this->loginResponseModel->setResponseErrors(
-                [
-                    'validator' => $validator->getErrors()
-                ]
-            );
-            return false;
-        }
-
-        return true;
+        return $this->responseModel;
     }
 
     private function authentication()
     {
-        $user = $this->findUser($this->loginRequest->email);
+        $user = $this->findUser($this->requestModel->email);
 
-        if (isset($user) && $this->validateUserPassword($user, $this->loginRequest->password)) {
-            $this->loginResponseModel->setResponseStatus(true);
-            $this->loginResponseModel->setResponseStatusCode(200);
+        if (isset($user) && $this->validateUserPassword($user, $this->requestModel->password)) {
+            $this->responseModel->setResponseStatus(true);
+            $this->responseModel->setResponseStatusCode(200);
 
             $token = $this->createAuthTokenResponse($user);
-            $this->loginResponseModel->setTokenResponse($token);
-            $this->loginResponseModel->setUserResponse($this->getUserResponse($user));
+            $this->responseModel->setTokenResponse($token);
+            $this->responseModel->setUserResponse($this->getUserResponse($user));
         } else {
-            $this->loginResponseModel->setResponseStatus(false);
-            $this->loginResponseModel->setResponseStatusCode(401);
-            $this->loginResponseModel->setResponseErrors(
+            $this->responseModel->setResponseStatus(false);
+            $this->responseModel->setResponseStatusCode(401);
+            $this->responseModel->setResponseErrors(
                 [
                     'auth' => [
                         'Hibás bejelentkezési adatok!'

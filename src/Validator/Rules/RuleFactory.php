@@ -10,6 +10,11 @@ class RuleFactory
         'minLength' => MinLengthValidatorRule::class,
         'password' => PasswordCompositeValidatorRule::class,
         'email' => EmailCompositeValidatorRule::class,
+        'unique' => UniqueValidatorRule::class,
+        'isSame' => DataIsSameValidatorRule::class,
+        'userName' => UserNameCompositeValidatorRule::class,
+        'passwordConfirmation' => PasswordConfirmationCompositeValidatorRule::class,
+        'userEmailIsUnique' => UserEmailIsUniqueCompositeValidatorRule::class,
     ];
 
     public static function getRule($name, $config = null)
