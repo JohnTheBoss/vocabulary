@@ -4,7 +4,7 @@ namespace App\Adapter;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RequestAdapter
+class RequestAdapter implements RequestAdapterInterface
 {
     protected $request;
 
@@ -34,4 +34,8 @@ class RequestAdapter
     }
 
 
+    public function getHeaders()
+    {
+        return $this->request->headers->all();
+    }
 }

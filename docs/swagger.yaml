@@ -9,9 +9,17 @@ basePath: /api/v1
 schemes:
   - https
 
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
 paths:
   /auth/login:
     post:
+      tags:
+        - Auth
       summary: Authentikáció
       produces:
         - application/json
@@ -28,9 +36,6 @@ paths:
               - $ref: '#/definitions/StatusResponse'
             properties:
               errors:
-                type: array
-                items:
-                  type: string
                 default: [ ]
                 example: [ ]
               user:
@@ -73,6 +78,8 @@ paths:
                 ]
   /auth/register:
     post:
+      tags:
+        - Auth
       summary: Regisztráció
       produces:
         - application/json
@@ -89,7 +96,6 @@ paths:
               - $ref: '#/definitions/StatusResponse'
             properties:
               errors:
-                type: array
                 items:
                   type: string
                 default: [ ]
@@ -123,6 +129,108 @@ paths:
                         ]
                     ]
                 ]
+
+  /dictionary:
+    get:
+      summary: Összes megosztott szótár
+      security:
+        - Bearer: [ ]
+      tags:
+        - Dictionary
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Visszatér azokkal a megosztott szótárakkal amiket a felhasználó még nem rendelt a saját szótárához.
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+
+            properties:
+              success:
+                example: true
+              errors:
+                items:
+                  type: string
+                default: [ ]
+                example: [ ]
+              dictionaries:
+                type: array
+                items:
+                  $ref: '#/definitions/Dictionary'
+                example: [
+                  {
+                    "id": 1,
+                    "name": "Angol - Magyar színek és számok",
+                    "knownLanguage": "Magyar",
+                    "foreignLanguage": "Angol",
+                    "shared": true
+                  },
+                  {
+                    "id": 2,
+                    "name": "Angol - Magyar IT kifejezések",
+                    "knownLanguage": "Magyar",
+                    "foreignLanguage": "Angol",
+                    "shared": false
+                  },
+                ]
+        401:
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+    post:
+      summary: Új szótár létrehozása
+      tags:
+        - Dictionary
+      responses: A
+      produces:
+        - application/json
+
+  /dictionary/my:
+    get:
+      summary: Felhasználó által létrehozott szótárak
+      tags:
+        - Dictionary
+      produces:
+        - application/json
+      responses:
+        401:
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+
+  /dictionary/{id}:
+    get:
+      summary: Adott szótárhoz tartozó szavak lekérdezése
+      tags:
+        - Dictionary
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
+      responses:
+        401:
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        404:
+          description: Nincs ilyen ID-ú szótár, vagy olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [ "Nincs ilyen szótár!" ]
+
 
 definitions:
   Login:
@@ -158,6 +266,31 @@ definitions:
       password_confirmation:
         type: string
         example: 'R€kAJ3Ł$zav4VagyOk'
+  Dictionary:
+    type: object
+    required:
+      - name
+      - knownLanguage
+      - foreignLanguage
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+        description: Szótár megnevezése
+        example: "Angol - Magyar színek és számok"
+      knownLanguage:
+        type: string
+        description: Felhasználó anyanyelve / ismert nyelve
+        example: Magyar
+      foreignLanguage:
+        type: string
+        description: Felhasználó tanulni kívánt nyelve
+        example: Angol
+      shared:
+        type: boolean
+        description: Szótár megvan osztva a többi felhasználóval?
+        example: false
 
   StatusResponse:
     type: object
@@ -191,3 +324,17 @@ definitions:
       expire:
         type: integer
         example: 1636000000
+
+  UnautorizedResponse:
+    type: object
+    description: A felhasználó nincs bejelentkezve, vagy olyan műveletet próbál végrehajtani, amihez nincs engedélye
+    allOf:
+      - $ref: '#/definitions/StatusResponse'
+    properties:
+      success:
+        default: false
+        example: false
+      errors:
+        default: [ "Felhasználó nincs bejelentkezve!" ]
+        example: [ "Felhasználó nincs bejelentkezve!" ]
+

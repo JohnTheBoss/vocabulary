@@ -30,6 +30,11 @@ class JWTAdapter implements JWTAdapterInterface
 
     }
 
+    public function validate($token): object
+    {
+        return JWT::decode($token, $this->jwtSecret, ['HS256']);
+    }
+
     private function getBaseToken()
     {
         return [
