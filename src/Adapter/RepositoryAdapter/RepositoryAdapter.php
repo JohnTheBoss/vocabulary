@@ -23,6 +23,12 @@ abstract class RepositoryAdapter implements EntityRepositoryInterface
         return $this->repository->findAll();
     }
 
+
+    public function findById($id)
+    {
+        return $this->repository->find($id);
+    }
+
     public function findOneBy(array $criteria)
     {
         return $this->repository->findOneBy($criteria);

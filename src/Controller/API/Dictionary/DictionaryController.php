@@ -16,6 +16,8 @@ class DictionaryController extends AbstractAuthenticationBaseController
      */
     public function index()
     {
-        return $this->json([], 201);
+        return $this->json([
+            'user' => $this->getUser(),
+        ], 201);
     }
 }

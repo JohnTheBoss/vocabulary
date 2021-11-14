@@ -25,9 +25,13 @@ class JWTAdapter implements JWTAdapterInterface
         return JWT::encode($token, $this->jwtSecret);
     }
 
-    public function decode()
+    public function decode($token)
     {
-
+        try {
+            return $this->validate($token);
+        } catch (\Throwable $exception) {
+            return null;
+        }
     }
 
     public function validate($token): object
