@@ -275,6 +275,56 @@ paths:
                 default: false
               errors:
                 example: [ "Nincs ilyen szótár!" ]
+    delete:
+      summary: Törli az adott szótárat és a hozzá csatolt szavakat is.
+      tags:
+        - Dictionary
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
+      responses:
+        201:
+          description: Szótár és a hozzá tartozó szavak sikeresen törölve
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+              errors:
+                default: []
+        401:
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        403:
+          description: Olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [ "Nincs hozzáférésed az alábbi szótárhoz!" ]
+        404:
+          description: Nincs ilyen ID-ú szótár.
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [ "Nincs ilyen szótár!" ]
 
 
 definitions:
@@ -342,7 +392,6 @@ definitions:
           type: object
           allOf:
             - $ref: '#/definitions/Word'
-
   Word:
     type: object
     properties:

@@ -15,6 +15,8 @@ interface EntityRepositoryInterface
 
     public function save($object);
 
+    public function delete($object);
+
     public function execute();
 
 }

@@ -3,6 +3,7 @@
 namespace App\Controller\API\Dictionary;
 
 use App\Controller\API\AbstractAuthenticationBaseController;
+use App\Service\Dictionary\DictionaryDeletesService;
 use App\Service\Dictionary\DictionaryListService;
 use App\Service\Dictionary\DictionaryService;
 use App\Service\Dictionary\DictionaryWithWordsService;
@@ -56,6 +57,24 @@ class DictionaryController extends AbstractAuthenticationBaseController
     {
         $dictionaryService->setDictionaryId($id);
         $responseModel = $dictionaryService->getResponseModel();
+
+        return $this->json(
+            $responseModel->getResponse(),
+            $responseModel->getStatusCode()
+        );
+    }
+
+    /**
+     * @Route(
+     *     name="dictionary_delete",
+     *     path="/dictionary/{id}",
+     *     methods={"DELETE"}
+     *     )
+     */
+    public function deleteDictionary($id, DictionaryDeletesService $dictionaryDeletesService)
+    {
+        $dictionaryDeletesService->setDictionaryId($id);
+        $responseModel = $dictionaryDeletesService->getResponseModel();
 
         return $this->json(
             $responseModel->getResponse(),

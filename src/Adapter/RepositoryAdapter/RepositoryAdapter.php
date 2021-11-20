@@ -39,6 +39,12 @@ abstract class RepositoryAdapter implements EntityRepositoryInterface
         return $this->repository->findOneBy($criteria);
     }
 
+    public function delete($object)
+    {
+        $this->entityManager->remove($object);
+        $this->execute();
+    }
+
     public function save($object)
     {
         $this->entityManager->persist($object);
