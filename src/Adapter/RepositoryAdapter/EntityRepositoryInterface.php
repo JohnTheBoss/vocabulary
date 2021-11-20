@@ -9,6 +9,8 @@ interface EntityRepositoryInterface
 
     public function findById($id);
 
+    public function findAllBy(array $criteria): array;
+
     public function findOneBy(array $criteria);
 
     public function save($object);

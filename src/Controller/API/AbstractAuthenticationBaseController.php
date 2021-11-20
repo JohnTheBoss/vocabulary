@@ -15,7 +15,9 @@ abstract class AbstractAuthenticationBaseController extends AbstractController
     public function __construct(TokenDecoderService $tokenDecoderService, UserRepositoryAdapter $userRepositoryAdapter)
     {
         $user = $tokenDecoderService->getTokenData();
-        $this->userData = $userRepositoryAdapter->findById($user->id);
+        if (!empty($user)) {
+            $this->userData = $userRepositoryAdapter->findById($user->id);
+        }
 
     }
 

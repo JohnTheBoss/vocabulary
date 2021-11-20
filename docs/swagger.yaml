@@ -132,7 +132,7 @@ paths:
 
   /dictionary:
     get:
-      summary: Összes megosztott szótár
+      summary: Visszatér a felhasználó álltal létrehozott szótárakkal
       security:
         - Bearer: [ ]
       tags:
@@ -141,7 +141,7 @@ paths:
         - application/json
       responses:
         200:
-          description: Visszatér azokkal a megosztott szótárakkal amiket a felhasználó még nem rendelt a saját szótárához.
+          description: Visszatér a felhasználó álltal létrehozott szótárakkal
           schema:
             allOf:
               - $ref: '#/definitions/StatusResponse'
@@ -183,18 +183,46 @@ paths:
       summary: Új szótár létrehozása
       tags:
         - Dictionary
-      responses: A
-      produces:
-        - application/json
-
-  /dictionary/my:
-    get:
-      summary: Felhasználó által létrehozott szótárak
-      tags:
-        - Dictionary
+      security:
+        - Bearer: [ ]
       produces:
         - application/json
       responses:
+        201:
+          description: Szótár sikeresen létrehozva
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+              errors:
+                default: []
+        400:
+          description: Nem lehet létrehozni a szótárat mert hiányoznak szükséges mezők vagy nem felelnek meg az adatok a követelményeknek
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [
+                    "validator": [
+                        "name": [
+                            "Mező kitöltése kötelező",
+                            "A minimum karakter hossz nem éri el a 2 hosszt!"
+                        ],
+                        "knownLanguage": [
+                            "Mező kitöltése kötelező",
+                            "A minimum karakter hossz nem éri el a 1 hosszt!"
+                        ],
+                        "foreignLanguage": [
+                            "A jelszó nem felel meg a követelményeknek!",
+                            "A minimum karakter hossz nem éri el a 1 hosszt!"
+                        ]
+                    ]
+                ]
         401:
           description: A felhasználó nincs bejelentkezve
           schema:
@@ -206,6 +234,8 @@ paths:
       summary: Adott szótárhoz tartozó szavak lekérdezése
       tags:
         - Dictionary
+      security:
+        - Bearer: [ ]
       produces:
         - application/json
       parameters:
@@ -215,13 +245,28 @@ paths:
           type: integer
           required: true
       responses:
+        200:
+          description: Visszatér a szótár adataival és a szótárban található szavakkal.
+          schema:
+            allOf:
+              - $ref: '#/definitions/Dictionary'
         401:
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
+        403:
+          description: Olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [ "Nincs hozzáférésed az alábbi szótárhoz!" ]
         404:
-          description: Nincs ilyen ID-ú szótár, vagy olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
+          description: Nincs ilyen ID-ú szótár.
           schema:
             allOf:
               - $ref: '#/definitions/StatusResponse'
@@ -291,6 +336,24 @@ definitions:
         type: boolean
         description: Szótár megvan osztva a többi felhasználóval?
         example: false
+      words:
+        type: array
+        items:
+          type: object
+          allOf:
+            - $ref: '#/definitions/Word'
+
+  Word:
+    type: object
+    properties:
+      id:
+        type: integer
+      knownLanguage:
+        type: string
+        example: sárga
+      foreignLanguage:
+        type: string
+        example: yellow
 
   StatusResponse:
     type: object
