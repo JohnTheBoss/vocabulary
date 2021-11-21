@@ -116,9 +116,15 @@ abstract class BaseWordService extends AbstractRequestService
 
     public function preTestResponse(): ?ResponseModelInterface
     {
-        $this->testDictionaryIdSetted();
+        $testDictionaryId = $this->testDictionaryIdSetted();
+        if (!empty($testDictionaryId)) {
+            return $testDictionaryId;
+        }
 
-        $this->testDictionaryExists();
+        $testDictionaryExists = $this->testDictionaryExists();
+        if (!empty($testDictionaryExists)) {
+            return $testDictionaryExists;
+        }
 
         if (!$this->checkUserHasAccess()) {
             $this->responseModel->setResponseStatusCode(403);

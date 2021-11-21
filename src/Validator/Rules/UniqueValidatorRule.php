@@ -16,11 +16,16 @@ class UniqueValidatorRule extends AbstractValidatorRule
         $filter = [$field => $data];
 
         if (isset($this->config['filter'])) {
-            $filter[$this->config['filter']] = $this->config['filterValue'];
+            $filter = array_merge($filter, $this->config['filter']);
         }
 
         $find = $entityRepository->findOneBy($filter);
         if (!empty($find)) {
+            $field = $this->config['filterSkipField'];
+            if ($find->{$field}() == $this->config['filterSkipValue']) {
+                return;
+            }
+
             $this->addError('Az értéknek egyedinek kell lennie!');
         }
     }
