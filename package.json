@@ -1,0 +1,11 @@
+{
+  "name": "frontend-build",
+  "engines": {
+    "node": "14"
+  },
+  "scripts": {
+    "build": "cd frontend && npm install && npm rum build",
+    "deploy": "cp -a frontend/dist/. backend/public/frontend",
+    "heroku-postbuild": "npm rum build && npm run deploy"
+  }
+}
