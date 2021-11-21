@@ -15,6 +15,7 @@ class RuleFactory
         'userName' => UserNameCompositeValidatorRule::class,
         'passwordConfirmation' => PasswordConfirmationCompositeValidatorRule::class,
         'userEmailIsUnique' => UserEmailIsUniqueCompositeValidatorRule::class,
+        'dictionaryWordUnique' => DictionaryWordUniqueCompositeValidatorRule::class,
     ];
 
     public static function getRule($name, $config = null)

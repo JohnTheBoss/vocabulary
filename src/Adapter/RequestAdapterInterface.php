@@ -10,6 +10,8 @@ interface RequestAdapterInterface
 
     public function getQueryData();
 
+    public function getParameters();
+
     public function getFiles();
 
     public function getHeaders();

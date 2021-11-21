@@ -18,7 +18,7 @@ class InputValidatorBuilder
         $this->validatorConfig[$inputName] = $ruleConfig;
     }
 
-    public function addUniqueInput($inputName, $validatorType, $data, EntityRepositoryInterface $entityRepository, $field)
+    public function addUniqueInput($inputName, $validatorType, $data, EntityRepositoryInterface $entityRepository, $field, $config = [])
     {
         $config['entityRepository'] = $entityRepository;
         $config['entityField'] = $field;

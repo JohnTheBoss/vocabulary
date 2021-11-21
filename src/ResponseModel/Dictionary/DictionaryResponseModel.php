@@ -3,6 +3,7 @@
 namespace App\ResponseModel\Dictionary;
 
 use App\Entity\Dictionary;
+use App\Entity\Word;
 use App\ResponseModel\AbstractResponseModel;
 
 class DictionaryResponseModel extends AbstractResponseModel
@@ -16,7 +17,18 @@ class DictionaryResponseModel extends AbstractResponseModel
         $this->dictionary['name'] = $dictionary->getName();
         $this->dictionary['knownLanguage'] = $dictionary->getKnownLanguage();
         $this->dictionary['foreignLanguage'] = $dictionary->getForeignLanguage();
-        $words = $dictionary->getWords()->toArray();
+
+        $words = array_map(
+            /** @var Word $word */
+            function ($word){
+                return [
+                    'knownLanguage' => $word->getKnownLanguage(),
+                    'foreignLanguage' => $word->getForeignLanguage(),
+                ];
+            },
+            $dictionary->getWords()->toArray()
+        );
+
         $this->dictionary['words'] = $words;
     }
 

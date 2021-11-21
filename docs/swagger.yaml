@@ -187,6 +187,13 @@ paths:
         - Bearer: [ ]
       produces:
         - application/json
+      parameters:
+        - in: body
+          name: auth
+          schema:
+            allOf:
+              - $ref: '#/definitions/Dictionary'
+
       responses:
         201:
           description: Szótár sikeresen létrehozva
@@ -249,7 +256,7 @@ paths:
           description: Visszatér a szótár adataival és a szótárban található szavakkal.
           schema:
             allOf:
-              - $ref: '#/definitions/Dictionary'
+              - $ref: '#/definitions/DictionaryList'
         401:
           description: A felhasználó nincs bejelentkezve
           schema:
@@ -326,6 +333,125 @@ paths:
               errors:
                 example: [ "Nincs ilyen szótár!" ]
 
+  /dictionary/{dictionaryId}/word:
+    post:
+      summary: Új szó hozzáadása a szótárhoz
+      tags:
+        - DictionaryWord
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: dictionaryId
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
+        - in: body
+          name: auth
+          schema:
+            allOf:
+              - $ref: '#/definitions/Word'
+      responses:
+        201:
+          description: Szó sikeresen létrehozva
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+              errors:
+                default: []
+        400:
+          description: Nem lehet létrehozni a szótárat mert hiányoznak szükséges mezők vagy nem felelnek meg az adatok a követelményeknek
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: false
+              errors:
+                example: [
+                    "validator": [
+                        "knownLanguage": [
+                            "Mező kitöltése kötelező",
+                            "A minimum karakter hossz nem éri el a 1 hosszt!",
+                            "A mezőnek egyedinek kell lennie, ilyen szó már van a rendszerben"
+                        ],
+                        "foreignLanguage": [
+                            "A jelszó nem felel meg a követelményeknek!",
+                            "A minimum karakter hossz nem éri el a 1 hosszt!",
+                            "A mezőnek egyedinek kell lennie, ilyen szó már van a rendszerben"
+                        ]
+                    ]
+                ]
+        401:
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        403:
+          description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
+        404:
+          description: Nincs ilyen szótár
+  /dictionary/{dictionaryId}/word/{id}:
+    get:
+      tags:
+        - DictionaryWord
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: dictionaryId
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
+        - name: id
+          in: path
+          description: Szó ID
+          type: integer
+          required: true
+    put:
+      summary: Szerkesztés, tartalmazza az összes elemet.
+      tags:
+        - DictionaryWord
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: dictionaryId
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
+        - name: id
+          in: path
+          description: Szó ID
+          type: integer
+          required: true
+    delete:
+      tags:
+        - DictionaryWord
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: dictionaryId
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
+        - name: id
+          in: path
+          description: Szó ID
+          type: integer
+          required: true
 
 definitions:
   Login:
@@ -361,6 +487,7 @@ definitions:
       password_confirmation:
         type: string
         example: 'R€kAJ3Ł$zav4VagyOk'
+
   Dictionary:
     type: object
     required:
@@ -386,23 +513,36 @@ definitions:
         type: boolean
         description: Szótár megvan osztva a többi felhasználóval?
         example: false
+
+  DictionaryList:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Dictionary'
+    properties:
       words:
         type: array
         items:
           type: object
           allOf:
-            - $ref: '#/definitions/Word'
+            - $ref: '#/definitions/WordList'
+
   Word:
     type: object
     properties:
-      id:
-        type: integer
       knownLanguage:
         type: string
         example: sárga
       foreignLanguage:
         type: string
         example: yellow
+
+  WordList:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Word'
+    properties:
+      id:
+        type: integer
 
   StatusResponse:
     type: object

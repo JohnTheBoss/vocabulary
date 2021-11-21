@@ -13,7 +13,13 @@ class UniqueValidatorRule extends AbstractValidatorRule
         $entityRepository = $this->config['entityRepository'];
         $field = $this->config['entityField'];
 
-        $find = $entityRepository->findOneBy([$field => $data]);
+        $filter = [$field => $data];
+
+        if (isset($this->config['filter'])) {
+            $filter[$this->config['filter']] = $this->config['filterValue'];
+        }
+
+        $find = $entityRepository->findOneBy($filter);
         if (!empty($find)) {
             $this->addError('Az értéknek egyedinek kell lennie!');
         }

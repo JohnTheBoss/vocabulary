@@ -13,6 +13,11 @@ class RequestAdapter implements RequestAdapterInterface
         $this->request = $request->getCurrentRequest();
     }
 
+    public function getParameters()
+    {
+        return $this->request->attributes->all();
+    }
+
     public function getRequestData()
     {
         return $this->request->getContent();
