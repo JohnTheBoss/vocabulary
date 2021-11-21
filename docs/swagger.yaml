@@ -274,20 +274,13 @@ paths:
           description: Olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
           schema:
             allOf:
-              - $ref: '#/definitions/StatusResponse'
-            properties:
-              success:
-                default: false
-              errors:
-                example: [ "Nincs hozzáférésed az alábbi szótárhoz!" ]
+              - $ref: '#/definitions/AccessDenied'
         404:
           description: Nincs ilyen ID-ú szótár.
           schema:
             allOf:
-              - $ref: '#/definitions/StatusResponse'
+              - $ref: '#/definitions/NotFound'
             properties:
-              success:
-                default: false
               errors:
                 example: [ "Nincs ilyen szótár!" ]
     delete:
@@ -324,20 +317,16 @@ paths:
           description: Olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
           schema:
             allOf:
-              - $ref: '#/definitions/StatusResponse'
+              - $ref: '#/definitions/AccessDenied'
             properties:
-              success:
-                default: false
               errors:
                 example: [ "Nincs hozzáférésed az alábbi szótárhoz!" ]
         404:
           description: Nincs ilyen ID-ú szótár.
           schema:
             allOf:
-              - $ref: '#/definitions/StatusResponse'
+              - $ref: '#/definitions/NotFound'
             properties:
-              success:
-                default: false
               errors:
                 example: [ "Nincs ilyen szótár!" ]
 
@@ -402,8 +391,14 @@ paths:
               - $ref: '#/definitions/UnautorizedResponse'
         403:
           description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
+          schema:
+            allOf:
+              - $ref: '#/definitions/AccessDenied'
         404:
           description: Nincs ilyen szótár
+          schema:
+            allOf:
+              - $ref: '#/definitions/NotFound'
   /dictionary/{dictionaryId}/word/{id}:
     get:
       tags:
@@ -423,6 +418,39 @@ paths:
           description: Szó ID
           type: integer
           required: true
+      responses:
+        200:
+          description: Visszaadja a szót
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+              errors:
+                default: [ ]
+              word:
+                type: object
+                allOf:
+                  - $ref: '#/definitions/Word'
+                properties:
+                  id:
+                    type: integer
+        401:
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        403:
+          description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
+          schema:
+            allOf:
+              - $ref: '#/definitions/AccessDenied'
+        404:
+          description: Nincs ilyen szó
+          schema:
+            allOf:
+              - $ref: '#/definitions/NotFound'
     put:
       summary: Szerkesztés, tartalmazza az összes elemet.
       tags:
@@ -597,4 +625,27 @@ definitions:
       errors:
         default: [ "Felhasználó nincs bejelentkezve!" ]
         example: [ "Felhasználó nincs bejelentkezve!" ]
-
+  NotFound:
+    type: object
+    description: Nincs találat
+    allOf:
+      - $ref: '#/definitions/StatusResponse'
+    properties:
+      success:
+        default: false
+        example: false
+      errors:
+        default: [ "Nincs ilyen!" ]
+        example: [ "Nincs ilyen!" ]
+  AccessDenied:
+    type: object
+    description: Hozzáférés megtagadva
+    allOf:
+      - $ref: '#/definitions/StatusResponse'
+    properties:
+      success:
+        default: false
+        example: false
+      errors:
+        default: [ "Nincs jogosultságod megtekinteni!" ]
+        example: [ "Nincs jogosultságod megtekinteni!" ]
