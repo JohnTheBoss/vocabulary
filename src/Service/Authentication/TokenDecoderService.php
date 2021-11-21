@@ -49,7 +49,7 @@ class TokenDecoderService
         } catch (ExpiredException $expiredException) {
             return self::TOKEN_EXPIRED;
         } catch (\Throwable $e) {
-            return self::TOKEN_VALID;
+            return self::TOKEN_INVALID;
         }
     }
 
