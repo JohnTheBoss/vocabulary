@@ -6,7 +6,7 @@
   },
   "scripts": {
     "build": "yarn --cwd frontend install --production=false && yarn --cwd frontend build",
-    "deploy": "cp -a frontend/dist/. backend/public/frontend",
+    "deploy": "cp -a frontend/dist/frontend/. backend/public/frontend",
     "heroku-postbuild": "yarn build && yarn deploy"
   }
 }
