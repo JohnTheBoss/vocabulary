@@ -597,6 +597,54 @@ paths:
             allOf:
               - $ref: '#/definitions/NotFound'
 
+  /enrol:
+    get:
+      tags:
+        - Enrol
+      responses:
+        200:
+          description: TODO
+    post:
+      tags:
+        - Enrol
+      responses:
+        200:
+          description: TODO
+    delete:
+      tags:
+        - Enrol
+      responses:
+        200:
+          description: TODO
+
+  /play:
+    post:
+      tags:
+        - Play
+      summary: Új játék indítása
+      responses:
+        200:
+          description: TODO
+
+  /play/{gameId}/{puzzle}:
+    post:
+      tags:
+        - Play
+      parameters:
+        - name: gameId
+          in: path
+          description: a /play-ben kapott gameId
+          type: integer
+          required: true
+        - name: puzzle
+          in: path
+          description: a /play-ben kapott feladványok azonosítója
+          type: integer
+          required: true
+      summary: Az elindított játékhoz tartozó feladványt küldheti be
+      responses:
+        200:
+          description: TODO
 
 definitions:
   Login:
