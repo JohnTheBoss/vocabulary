@@ -204,7 +204,7 @@ paths:
               success:
                 default: true
               errors:
-                default: []
+                default: [ ]
         400:
           description: Nem lehet létrehozni a szótárat mert hiányoznak szükséges mezők vagy nem felelnek meg az adatok a követelményeknek
           schema:
@@ -256,7 +256,15 @@ paths:
           description: Visszatér a szótár adataival és a szótárban található szavakkal.
           schema:
             allOf:
-              - $ref: '#/definitions/DictionaryList'
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              errors:
+                default: [ ]
+              dictionary:
+                type: object
+                allOf:
+                  - $ref: '#/definitions/Dictionary'
+                  - $ref: '#/definitions/DictionaryList'
         401:
           description: A felhasználó nincs bejelentkezve
           schema:
@@ -306,7 +314,7 @@ paths:
               success:
                 default: true
               errors:
-                default: []
+                default: [ ]
         401:
           description: A felhasználó nincs bejelentkezve
           schema:
@@ -363,7 +371,7 @@ paths:
               success:
                 default: true
               errors:
-                default: []
+                default: [ ]
         400:
           description: Nem lehet létrehozni a szótárat mert hiányoznak szükséges mezők vagy nem felelnek meg az adatok a követelményeknek
           schema:

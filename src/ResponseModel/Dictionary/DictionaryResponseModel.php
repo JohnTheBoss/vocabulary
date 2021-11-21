@@ -22,6 +22,7 @@ class DictionaryResponseModel extends AbstractResponseModel
             /** @var Word $word */
             function ($word){
                 return [
+                    'id' => $word->getId(),
                     'knownLanguage' => $word->getKnownLanguage(),
                     'foreignLanguage' => $word->getForeignLanguage(),
                 ];
