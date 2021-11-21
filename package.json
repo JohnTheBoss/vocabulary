@@ -4,8 +4,8 @@
     "node": "14"
   },
   "scripts": {
-    "build": "cd frontend && npm install && npm rum build",
+    "build": "cd frontend && npm install && npm run build",
     "deploy": "cp -a frontend/dist/. backend/public/frontend",
-    "heroku-postbuild": "npm rum build && npm run deploy"
+    "heroku-postbuild": "npm run build && npm run deploy"
   }
 }
