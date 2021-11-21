@@ -32,8 +32,7 @@ class WordRequest extends AbstractRequest
 
     public function getValidator(): Validator
     {
-        $config['filter'] = 'dictionary';
-        $config['filterValue'] = $this->dictionaryId;
+        $config['filter'] = ['dictionary' => $this->dictionaryId];
 
         $this->validatorBuilder->addUniqueInput('knownLanguage', 'dictionaryWordUnique', $this->knownLanguage, $this->wordRepositoryAdapter, 'knownLanguage', $config);
         $this->validatorBuilder->addUniqueInput('foreignLanguage', 'dictionaryWordUnique', $this->foreignLanguage, $this->wordRepositoryAdapter, 'foreignLanguage', $config);

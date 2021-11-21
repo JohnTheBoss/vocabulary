@@ -4,6 +4,7 @@ namespace App\Controller\API\Word;
 
 use App\Controller\API\AbstractAuthenticationBaseController;
 use App\Service\Word\WordCreateService;
+use App\Service\Word\WordDeleteService;
 use App\Service\Word\WordEditService;
 use App\Service\Word\WordShowService;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,6 +60,25 @@ class WordController extends AbstractAuthenticationBaseController
         $wordEditService->setDictionaryId($dictionaryId);
         $wordEditService->setWordId($wordId);
         $responseModel = $wordEditService->getResponseModel();
+
+        return $this->json(
+            $responseModel->getResponse(),
+            $responseModel->getStatusCode()
+        );
+    }
+
+    /**
+     * @Route(
+     *     name="word_delete",
+     *     path="/dictionary/{dictionaryId}/word/{wordId}",
+     *     methods={"DELETE"}
+     *     )
+     */
+    public function delete($dictionaryId, $wordId, WordDeleteService $wordDeleteService)
+    {
+        $wordDeleteService->setDictionaryId($dictionaryId);
+        $wordDeleteService->setWordId($wordId);
+        $responseModel = $wordDeleteService->getResponseModel();
 
         return $this->json(
             $responseModel->getResponse(),

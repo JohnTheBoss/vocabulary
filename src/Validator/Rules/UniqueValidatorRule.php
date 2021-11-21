@@ -21,9 +21,12 @@ class UniqueValidatorRule extends AbstractValidatorRule
 
         $find = $entityRepository->findOneBy($filter);
         if (!empty($find)) {
-            $field = $this->config['filterSkipField'];
-            if ($find->{$field}() == $this->config['filterSkipValue']) {
-                return;
+
+            if (isset($this->config['filterSkipField'])) {
+                $field = $this->config['filterSkipField'];
+                if ($find->{$field}() == $this->config['filterSkipValue']) {
+                    return;
+                }
             }
 
             $this->addError('Az értéknek egyedinek kell lennie!');

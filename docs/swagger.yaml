@@ -570,6 +570,33 @@ paths:
           description: Szó ID
           type: integer
           required: true
+      responses:
+        200:
+          description: Sikeres törlés
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+              errors:
+                default: [ ]
+        401:
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        403:
+          description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
+          schema:
+            allOf:
+              - $ref: '#/definitions/AccessDenied'
+        404:
+          description: Nincs ilyen szó
+          schema:
+            allOf:
+              - $ref: '#/definitions/NotFound'
+
 
 definitions:
   Login:
