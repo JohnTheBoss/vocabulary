@@ -29,7 +29,7 @@ paths:
           schema:
             $ref: "#/definitions/Login"
       responses:
-        200:
+        "200":
           description: Sikeres belépés
           schema:
             allOf:
@@ -42,7 +42,7 @@ paths:
                 $ref: '#/definitions/AuthUserResponse'
               token:
                 $ref: '#/definitions/AuthToken'
-        400:
+        "400":
           description: Sikertelen belépés. Validálási probléma, az elküldött email cím, jelszó nem felel meg a validálási követelményeknek.
           schema:
             allOf:
@@ -62,7 +62,7 @@ paths:
                         ]
                     ]
                 ]
-        401:
+        "401":
           description: Sikertelen belépés, hibás felhasználói adatok
           schema:
             allOf:
@@ -89,7 +89,7 @@ paths:
           schema:
             $ref: "#/definitions/Register"
       responses:
-        200:
+        "200":
           description: Sikeres regisztráció
           schema:
             allOf:
@@ -100,7 +100,7 @@ paths:
                   type: string
                 default: [ ]
                 example: [ ]
-        400:
+        "400":
           description: Sikertelen regisztráció. Validálási probléma, az elküldött adatok nem felelnek meg a validálási követelményeknek.
           schema:
             allOf:
@@ -140,7 +140,7 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        "200":
           description: Visszatér a felhasználó álltal létrehozott szótárakkal
           schema:
             allOf:
@@ -174,7 +174,7 @@ paths:
                     "shared": false
                   },
                 ]
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
@@ -195,7 +195,7 @@ paths:
               - $ref: '#/definitions/Dictionary'
 
       responses:
-        201:
+        "201":
           description: Szótár sikeresen létrehozva
           schema:
             allOf:
@@ -205,7 +205,7 @@ paths:
                 default: true
               errors:
                 default: [ ]
-        400:
+        "400":
           description: Nem lehet létrehozni a szótárat mert hiányoznak szükséges mezők vagy nem felelnek meg az adatok a követelményeknek
           schema:
             allOf:
@@ -230,7 +230,7 @@ paths:
                         ]
                     ]
                 ]
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
@@ -252,7 +252,7 @@ paths:
           type: integer
           required: true
       responses:
-        200:
+        "200":
           description: Visszatér a szótár adataival és a szótárban található szavakkal.
           schema:
             allOf:
@@ -265,17 +265,17 @@ paths:
                 allOf:
                   - $ref: '#/definitions/Dictionary'
                   - $ref: '#/definitions/DictionaryList'
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
-        403:
+        "403":
           description: Olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
           schema:
             allOf:
               - $ref: '#/definitions/AccessDenied'
-        404:
+        "404":
           description: Nincs ilyen ID-ú szótár.
           schema:
             allOf:
@@ -298,7 +298,7 @@ paths:
           type: integer
           required: true
       responses:
-        201:
+        "201":
           description: Szótár és a hozzá tartozó szavak sikeresen törölve
           schema:
             allOf:
@@ -308,12 +308,12 @@ paths:
                 default: true
               errors:
                 default: [ ]
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
-        403:
+        "403":
           description: Olyan szótárat próbál elérni a felhasználó ami nem az ő tulajdona.
           schema:
             allOf:
@@ -321,7 +321,7 @@ paths:
             properties:
               errors:
                 example: [ "Nincs hozzáférésed az alábbi szótárhoz!" ]
-        404:
+        "404":
           description: Nincs ilyen ID-ú szótár.
           schema:
             allOf:
@@ -351,7 +351,7 @@ paths:
             allOf:
               - $ref: '#/definitions/Word'
       responses:
-        201:
+        "201":
           description: Szó sikeresen létrehozva
           schema:
             allOf:
@@ -361,7 +361,7 @@ paths:
                 default: true
               errors:
                 default: [ ]
-        400:
+        "400":
           description: Nem lehet létrehozni a szótárat mert hiányoznak szükséges mezők vagy nem felelnek meg az adatok a követelményeknek
           schema:
             allOf:
@@ -384,17 +384,17 @@ paths:
                         ]
                     ]
                 ]
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
-        403:
+        "403":
           description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
           schema:
             allOf:
               - $ref: '#/definitions/AccessDenied'
-        404:
+        "404":
           description: Nincs ilyen szótár
           schema:
             allOf:
@@ -419,7 +419,7 @@ paths:
           type: integer
           required: true
       responses:
-        200:
+        "200":
           description: Visszaadja a szót
           schema:
             allOf:
@@ -436,17 +436,17 @@ paths:
                 properties:
                   id:
                     type: integer
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
-        403:
+        "403":
           description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
           schema:
             allOf:
               - $ref: '#/definitions/AccessDenied'
-        404:
+        "404":
           description: Nincs ilyen szó
           schema:
             allOf:
@@ -476,7 +476,7 @@ paths:
             allOf:
               - $ref: '#/definitions/Word'
       responses:
-        200:
+        "200":
           description: Sikeres módosítás
           schema:
             allOf:
@@ -486,17 +486,17 @@ paths:
                 default: true
               errors:
                 default: [ ]
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
-        403:
+        "403":
           description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
           schema:
             allOf:
               - $ref: '#/definitions/AccessDenied'
-        404:
+        "404":
           description: Nincs ilyen szó
           schema:
             allOf:
@@ -526,7 +526,7 @@ paths:
             allOf:
               - $ref: '#/definitions/Word'
       responses:
-        200:
+        "200":
           description: Sikeres módosítás
           schema:
             allOf:
@@ -536,17 +536,17 @@ paths:
                 default: true
               errors:
                 default: [ ]
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
-        403:
+        "403":
           description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
           schema:
             allOf:
               - $ref: '#/definitions/AccessDenied'
-        404:
+        "404":
           description: Nincs ilyen szó
           schema:
             allOf:
@@ -571,7 +571,7 @@ paths:
           type: integer
           required: true
       responses:
-        200:
+        "200":
           description: Sikeres törlés
           schema:
             allOf:
@@ -581,17 +581,17 @@ paths:
                 default: true
               errors:
                 default: [ ]
-        401:
+        "401":
           description: A felhasználó nincs bejelentkezve
           schema:
             allOf:
               - $ref: '#/definitions/UnautorizedResponse'
-        403:
+        "403":
           description: Felhasználónak nincs jogosúltsága az adott szótárhoz.
           schema:
             allOf:
               - $ref: '#/definitions/AccessDenied'
-        404:
+        "404":
           description: Nincs ilyen szó
           schema:
             allOf:
@@ -602,19 +602,19 @@ paths:
       tags:
         - Enrol
       responses:
-        200:
+        "200":
           description: TODO
     post:
       tags:
         - Enrol
       responses:
-        200:
+        "200":
           description: TODO
     delete:
       tags:
         - Enrol
       responses:
-        200:
+        "200":
           description: TODO
 
   /play:
@@ -623,7 +623,7 @@ paths:
         - Play
       summary: Új játék indítása
       responses:
-        200:
+        "200":
           description: TODO
 
   /play/{gameId}/{puzzle}:
@@ -643,7 +643,7 @@ paths:
           required: true
       summary: Az elindított játékhoz tartozó feladványt küldheti be
       responses:
-        200:
+        "200":
           description: TODO
 
 definitions:
