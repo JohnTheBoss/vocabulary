@@ -16,7 +16,7 @@ use App\Service\AbstractRequestService;
 
 class AuthenticationService extends AbstractRequestService
 {
-    private const EXPIRE_TIME_IN_SECOND = 86400;
+    private const EXPIRE_TIME_IN_SECOND = 86400 * 30;
 
     protected RequestModelInterface $requestModel;
     private UserRepositoryAdapter $userRepositoryAdapter;

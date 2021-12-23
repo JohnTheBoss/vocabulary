@@ -27,7 +27,7 @@ class ContainsValidatorRule extends AbstractValidatorRule
                 return preg_match($rule, $data);
             case 'string':
             default:
-                return str_contains($data, $rule);
+                return strpos($data, $rule) !== false;
         }
     }
 

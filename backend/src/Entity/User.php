@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,6 +39,16 @@ class User
      * @ORM\Column(type="integer")
      */
     private $role;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DictionaryEnrol::class, mappedBy="user")
+     */
+    private $dictionaryEnrols;
+
+    public function __construct()
+    {
+        $this->dictionaryEnrols = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -87,6 +99,36 @@ class User
     public function setRole(int $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DictionaryEnrol[]
+     */
+    public function getDictionaryEnrols(): Collection
+    {
+        return $this->dictionaryEnrols;
+    }
+
+    public function addDictionaryEnrol(DictionaryEnrol $dictionaryEnrol): self
+    {
+        if (!$this->dictionaryEnrols->contains($dictionaryEnrol)) {
+            $this->dictionaryEnrols[] = $dictionaryEnrol;
+            $dictionaryEnrol->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDictionaryEnrol(DictionaryEnrol $dictionaryEnrol): self
+    {
+        if ($this->dictionaryEnrols->removeElement($dictionaryEnrol)) {
+            // set the owning side to null (unless already changed)
+            if ($dictionaryEnrol->getUser() === $this) {
+                $dictionaryEnrol->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -41,7 +41,7 @@ abstract class AbstractResponseModel implements ResponseModelInterface
         );
     }
 
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
