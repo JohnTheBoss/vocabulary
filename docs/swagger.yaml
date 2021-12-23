@@ -597,25 +597,159 @@ paths:
             allOf:
               - $ref: '#/definitions/NotFound'
 
-  /enrol:
+  /enrolled:
+    get:
+      tags:
+        - Enrolled
+      summary: A felhasználó által felvett szótárakkal tér vissza, ezekre tudja elindítani a gyakorlást.
+      security:
+        - Bearer: [ ]
+      responses:
+        "200":
+          description: Visszatér az összes felvett szótárral
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+              errors:
+                default: [ ]
+              enrolled:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/definitions/Dictionary'
+        "401":
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+
+  /availableDictionaries:
     get:
       tags:
         - Enrol
+      security:
+        - Bearer: [ ]
       responses:
         "200":
-          description: TODO
+          description: Felvehető szótárak
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+              dictionaries:
+                $ref: '#/definitions/AvailableDictionaryList'
+        "401":
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+
+
+  /enrol/{dictionaryId}:
     post:
       tags:
         - Enrol
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: dictionaryId
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
       responses:
         "200":
-          description: TODO
+          description: "Sikeresen felvette a szótárat"
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+                example: true
+              errors:
+                default: [ ]
+                example: [ ]
+
+        "401":
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        "404":
+          description: "Nincs megadott azonosítójú szótár"
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              errors:
+                default: [ "Ilyen azonosítójú szótár nem létezik!" ]
+                example: [ "Ilyen azonosítójú szótár nem létezik!" ]
+        "409":
+          description: "A megadott azonosítójú szótárat már felvette!"
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              errors:
+                default: [ "Az alábbi szótárat már felvette!" ]
+                example: [ "Az alábbi szótárat már felvette!" ]
     delete:
       tags:
         - Enrol
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: dictionaryId
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
       responses:
         "200":
-          description: TODO
+          description: Sikeres szótár leadás
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+                example: true
+              errors:
+                default: [ ]
+                example: [ ]
+        "401":
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        "404":
+          description: "Nincs megadott azonosítójú szótár"
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              errors:
+                default: [ "Ilyen azonosítójú szótár nem létezik!" ]
+                example: [ "Ilyen azonosítójú szótár nem létezik!" ]
+        "409":
+          description: "A megadott azonosítójú szótárat már leadta!"
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              errors:
+                default: [ "Az alábbi szótárat már leadta!" ]
+                example: [ "Az alábbi szótárat már leadta!" ]
 
   /play:
     post:
@@ -706,6 +840,15 @@ definitions:
         type: boolean
         description: Szótár megvan osztva a többi felhasználóval?
         example: false
+
+  AvailableDictionaryList:
+    type: array
+    items:
+      allOf:
+        - $ref: '#/definitions/Dictionary'
+      properties:
+        yours:
+          type: boolean
 
   DictionaryList:
     type: object
