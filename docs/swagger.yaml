@@ -751,34 +751,95 @@ paths:
                 default: [ "Az alábbi szótárat már leadta!" ]
                 example: [ "Az alábbi szótárat már leadta!" ]
 
-  /play:
+  /play/{dictionaryId}:
     post:
       tags:
         - Play
       summary: Új játék indítása
+      description: Új játék indításához meg kell adni a felvett szótár azonosítóját. A válaszban véletlenszerűen legenerálódik, egy játék ID-t a kérdéseket.
+      security:
+        - Bearer: [ ]
+      produces:
+        - application/json
+      parameters:
+        - name: dictionaryId
+          in: path
+          description: Szótár ID
+          type: integer
+          required: true
       responses:
         "200":
-          description: TODO
+          description: Sikeres játék generálás
+          schema:
+            allOf:
+              - $ref: '#/definitions/StatusResponse'
+            properties:
+              success:
+                default: true
+                example: true
+              errors:
+                default: [ ]
+                example: [ ]
+              game:
+                type: object
+                allOf:
+                  - $ref: '#/definitions/CreatedGameResponse'
+        "400":
+          description: Nincs felvéve az adott azonosítójú szótár
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        "401":
+          description: A felhasználó nincs bejelentkezve
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        "404":
+          description: A szótár nem taláható
+          schema:
+            allOf:
+              - $ref: '#/definitions/NotFound'
 
-  /play/{gameId}/{puzzle}:
+  /play/answer/{puzzleId}:
     post:
       tags:
         - Play
       parameters:
-        - name: gameId
-          in: path
-          description: a /play-ben kapott gameId
-          type: integer
-          required: true
-        - name: puzzle
+        - name: puzzleId
           in: path
           description: a /play-ben kapott feladványok azonosítója
           type: integer
           required: true
       summary: Az elindított játékhoz tartozó feladványt küldheti be
+      security:
+        - Bearer: [ ]
       responses:
         "200":
-          description: TODO
+          description: Az alábbi kérdésre már válaszolt a felhasználó, felülírni nem lehetséges. A visszatérésben egy error üzenet és a válasz értékeivel tér vissza.
+          schema:
+            allOf:
+              - $ref: '#/definitions/PuzzleAnswer'
+            properties:
+              errors:
+                example: ["Az alábbi kérdésre már válaszoltál!"]
+        "201":
+          description: Visszatér a kérdés eredményével.
+          schema:
+            allOf:
+              - $ref: '#/definitions/PuzzleAnswer'
+            properties:
+              errors:
+                example: [ ]
+        "401":
+          description: A megadott azonosítójú kérdés, egy másik felhasználóé.
+          schema:
+            allOf:
+              - $ref: '#/definitions/UnautorizedResponse'
+        "404":
+          description: Nincs ilyen kérdés
+          schema:
+            allOf:
+              - $ref: '#/definitions/NotFound'
 
 definitions:
   Login:
@@ -912,6 +973,62 @@ definitions:
       expire:
         type: integer
         example: 1636000000
+
+  CreatedGameResponse:
+    type: object
+    description: Visszaadja a /play/{dictionaryId}-ban létrehozott játékhoz tartozó adatokat.
+    properties:
+      gameId:
+        type: integer
+        description: Játék ID-ja
+      puzzles:
+        type: array
+        items:
+          type: object
+          allOf:
+            - $ref: '#/definitions/Puzzle'
+
+  Puzzle:
+    type: object
+    description: Kérdés leírása
+    properties:
+      id:
+        type: integer
+        description: Kérdés ID-ja
+      type:
+        type: string
+        description: Megmondja, hogy a kérdés idegen nyelven vagy felhasználó által beszélt nyelven van-e.
+        example: foreign
+      question:
+        type: string
+        example: yellow
+
+  PuzzleAnswer:
+    type: object
+    description: Válasz
+    allOf:
+      - $ref: '#/definitions/StatusResponse'
+    properties:
+      puzzle:
+        type: object
+        properties:
+          id:
+            type: number
+          questionType:
+            type: string
+            example: "known"
+          question:
+            type: string
+            example: "húzni"
+          yourAnswer:
+            type: string
+            example: "pull"
+          correctAnswer:
+            type: string
+            example: "pull"
+          correct:
+            type: boolean
+            example: true
 
   UnautorizedResponse:
     type: object

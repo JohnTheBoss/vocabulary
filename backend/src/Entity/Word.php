@@ -34,11 +34,6 @@ class Word
      */
     private $dictionary;
 
-    public function __construct()
-    {
-        $this->dictionary = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
