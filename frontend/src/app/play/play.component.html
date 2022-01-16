@@ -1,0 +1,7 @@
+<ng-component *ngIf="game; else errorMessageBox">
+    <p>play works!</p>
+</ng-component>
+<ng-template #errorMessageBox>
+    <h1>Hiba történt!</h1>
+    <p>Hiba üzenet: {{ errorMessage }}</p>
+</ng-template>

@@ -1,0 +1,11 @@
+<mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            {{dictionary.name}}
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="button-container">
+    <a mat-raised-button color="accent" [routerLink]="['/', 'play', dictionary.id]">Új játék indítás</a>
+    <button mat-raised-button color="warn">Szótár leadás</button>
+    </div>
+</mat-expansion-panel>

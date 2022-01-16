@@ -1,0 +1,3 @@
+<mat-accordion *ngIf="availableDictionaries">
+    <app-enrolled-dictionary *ngFor="let dictionary of availableDictionaries" [dictionary]="dictionary"></app-enrolled-dictionary>
+</mat-accordion>

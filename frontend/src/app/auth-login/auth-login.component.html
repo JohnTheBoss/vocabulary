@@ -1,0 +1,26 @@
+<form [formGroup]="loginForm" (ngSubmit)="submit()">
+    <mat-form-field appearance="outline">
+        <mat-label>Email cím</mat-label>
+        <input 
+        formControlName="email"
+        name="email"
+        matInput
+        >
+        <mat-error *ngIf="email.invalid">Hiba!</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Jelszó</mat-label>
+        <input
+        name="password"
+        type="password"
+        matInput
+        required
+        formControlName="password">
+        <mat-error *ngIf="password.invalid">Hiba!</mat-error>
+    </mat-form-field>
+
+    <div>
+        <button mat-raised-button color="primary">Belépés</button>
+    </div>
+</form>
