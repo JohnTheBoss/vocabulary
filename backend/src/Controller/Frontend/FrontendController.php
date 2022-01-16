@@ -73,7 +73,7 @@ class FrontendController extends AbstractController
             $response->headers->set('Content-Type', $fileType);
             return $response->send();
         } else {
-            throw new NotFoundHttpException("Guide {$path} Not Found.");
+            return $this->getFile('index.html');
         }
     }
 }
