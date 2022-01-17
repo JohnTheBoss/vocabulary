@@ -112,6 +112,8 @@ class CreateGameService extends AbstractRequestService
         $this->gameRepository->save($game);
 
         $this->responseModel->setGame($game);
+        $this->responseModel->setResponseStatusCode(200);
+        $this->responseModel->setResponseStatus(true);
     }
 
     private function generatePuzzle(Game $game)

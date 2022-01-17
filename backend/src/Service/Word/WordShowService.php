@@ -46,6 +46,8 @@ class WordShowService extends BaseWordService
         $wordResponse->setFromEntity($word);
 
         $this->responseModel->setWordResponse($wordResponse);
+        $this->responseModel->setResponseStatus(true);
+        $this->responseModel->setResponseStatusCode(200);
 
     }
 }

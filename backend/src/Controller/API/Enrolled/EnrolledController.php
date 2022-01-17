@@ -24,6 +24,8 @@ class EnrolledController extends \App\Controller\API\AbstractAuthenticationBaseC
 
         $responseModel = new EnrolledListResponseModel();
         $responseModel->setEnrolledDictionaries($userEnroll);
+        $responseModel->setResponseStatus(true);
+        $responseModel->setResponseStatusCode(200);
 
         return $this->json(
             $responseModel->getResponse(),
