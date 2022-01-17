@@ -1,2 +1,2 @@
 web: heroku-php-apache2 public/
-release: php bin/console cache:clear && php bin/console cache:warmup && rm migrations/Version* && php bin/console make:migration && php bin/console --no-interaction doctrine:migrations:migrate && php bin/console doctrine:fixtures:load
+release: php bin/console cache:clear && php bin/console cache:warmup && rm migrations/Version* && php bin/console make:migration && php bin/console --no-interaction doctrine:migrations:migrate && php bin/console doctrine:fixtures:load -n
